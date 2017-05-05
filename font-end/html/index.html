@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>GetUserMedia实例</title>
+</head>
+<body>
+<video id="video" width="320" height="240" class="margin"></video>
+<canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+<div id="stack" class="playground" style="background-color: darkgray;">
+</div>
+<div class="margin">
+    <p>
+    <div id="filterButtons"></div>
+    </p>
+    <ol type="1">
+        <li><button id="startButton">Start webcam</button></li>
+        <li><button id="photoButton">Take photo</button></li>
+        <li id="beCreative">Experiment with different filters. Take more photos. Drag them around.</li>
+    </ol>
+</div>
+
+</body>
+<script type="text/javascript">
+    (function() {
+        // A button for each filter will be created dynamically
+        var filters = [ {
+            name: "Reset",
+            filter: ""
+        }, {
+            name: "Blur",
+            filter: "blur(3px)"
+        }, {
+            name: "BnW",
+            filter: "grayscale(100%)"
+        }, {
+            name: "Bright",
+            filter: "brightness(300%)"
+        },{
+            name: "Hue",
+            filter: "hue-rotate(90deg)"
+        },{
+            name: "Invert",
+            filter: "invert(100%)"
+        },{
+            name: "Saturate",
+            filter: "saturate(800%)"
+        },{
+            name: "Sepia",
+            filter: "sepia(400%)"
+        },{
+            name: "Contrast",
+            filter: "contrast(500%)"
+        }];
+
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var canvasContext = canvas.getContext('2d');
+
+        navigator.getUserMedia = (navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia);
+
+        if (navigator.getUserMedia) {
+            function gotStream(stream) {
+                if (navigator.mozGetUserMedia) {
+                    video.mozSrcObject = stream;
+                } else {
+                    var vendorURL = window.URL || window.webkitURL;
+                    video.src = vendorURL.createObjectURL(stream);
+                }
+                video.play();
+            }
+
+            function error(message) {
+                console.log(message);
+            }
+
+            function start() {
+                this.disabled = true;
+                navigator.getUserMedia( {
+                        audio: false,
+                        video: {
+                            mandatory: {
+                                maxWidth: 320,
+                                maxHeight: 240
+                            }
+                        }
+                    },
+                    gotStream,
+                    error);
+            }
+
+
+            function takePhoto() {
+                canvasContext.drawImage(video, 0, 0, 320, 240);
+                var element = document.createElement("img");
+                element.src = canvas.toDataURL();
+                //获取照片信息
+                console.log(element.src);
+                document.getElementById("stack").appendChild(element);
+            }
+
+            document.getElementById("startButton").addEventListener('click', start);
+            start();
+            document.getElementById("photoButton").addEventListener('click', takePhoto);
+
+
+
+            function findFilterByName (filterArray, name) {
+                for(var i = 0; i < filterArray.length; i++) {
+                    if(filterArray[i].name === name) {
+                        return filterArray[i];
+                    }
+                }
+                // Not found
+                return null;
+            }
+
+            thisBrowserSupportsCssFilters = function () {
+                var prefixes = " -webkit- -moz- -o- -ms- ".split(" ");
+                var el = document.createElement('div');
+                el.style.cssText = prefixes.join('filter:blur(2px); ');
+                return !!el.style.length && ((document.documentMode === undefined || document.documentMode > 9));
+            };
+
+            if(thisBrowserSupportsCssFilters()) {
+                var buttonsDiv = document.getElementById("filterButtons");
+
+                filters.forEach(function(item){
+                    var button = document.createElement("button");
+                    button.id = item.name;
+                    button.innerHTML = item.name;
+                    // This will cause a re-flow of the page but I don't care
+                    buttonsDiv.appendChild(button);
+                });
+
+                function filterClicked (event) {
+                    event = event || window.event;
+                    var target = event.target || event.srcElement;
+                    if(target.nodeName === "BUTTON") {
+                        var filter = findFilterByName(filters, target.id);
+                        if(filter) {
+                            video.style.filter = filter.filter;
+                            video.style.webkitFilter = filter.filter;
+                        }
+                    }
+                };
+                buttonsDiv.addEventListener("click", filterClicked, false);
+            }
+
+        } else {
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("photoButton").disabled = true;
+
+            alert("Sorry, you can't capture video from your webcam in this web browser. Try the latest desktop version of Firefox, Chrome or Opera.");
+        }
+    })();
+</script>
+<html>
