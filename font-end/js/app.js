@@ -218,7 +218,6 @@ function changeState(str){
             document.getElementById("chat-box").innerText = data;
         }).fail(function(){
             console.log('Chat Error!');
-
         })
     }
 
