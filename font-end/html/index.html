@@ -10,8 +10,8 @@
 <div id="nav">
     <div id="nav-list">
         <a href="#" class="logo"></a>
-        <a href="#" class="nav-item">Team</a>
-        <a href="#" class="nav-item">Conversation</a>
+        <a href="https://www.hackx.org/projects/84" target="_blank" class="nav-item">Team</a>
+        <a href="https://github.com/shianqi/hackx-emotion-manager" target="_blank" class="nav-item">Github</a>
         <a href="#" class="nav-item">Journal</a>
     </div>
 </div>
@@ -66,8 +66,12 @@
 
 <div class="container">
     <p>
-        <label id="tab-change-label" for="tab-change"></label>
+        <input id="tab-video" type="checkbox">
+        <label id="tab-video-label" for="tab-video" title="显示我的影像"></label>
+
         <input id="tab-change" type="checkbox">
+        <label id="tab-change-label" for="tab-change" title="面部表情识别"></label>
+
         <button class="tab-button" data-bind="click: toggleRecording, text: recordButtonText, css: {'btn-danger': recording}"></button>
     </p>
 

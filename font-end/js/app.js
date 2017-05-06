@@ -1,3 +1,4 @@
+var tab_change_state = true;
 
 function removeClass(){
     $(".face-wrapper").children().removeAttr('class');
@@ -108,7 +109,9 @@ function changeState(str){
         var handleMessage = function(resp) {
             try {
                 var respObj = JSON.parse(resp);
-                textToEmotion(respObj.decoded);
+                if(respObj.decoded){
+                    textToEmotion(respObj.decoded);
+                }
                 chat(respObj.decoded);
                 self.overallScore(respObj.decoded);
                 respObj.details.forEach(function(wordRate) {
@@ -118,11 +121,11 @@ function changeState(str){
                     })
                 });
             } catch (e) {
-                self.hasError(true);
+                //self.hasError(true);
                 self.errorResp(resp);
                 self.errorInfo(e.message);
             }
-        }
+        };
 
         this.inited = ko.observable(false);
         initAudioSetting(function(stream){
@@ -144,7 +147,7 @@ function changeState(str){
             self.hasError(false);
             self.wordRates.removeAll();
             self.recording(!self.recording());
-        }
+        };
 
         //this.switchRefText = function() {
         //  self.readingRefText(randomPick(Constants.PreparedTexts));
@@ -208,6 +211,24 @@ function changeState(str){
         setTimeout(imgToEmotion, 1000);
     };
 
+    var tabButton = document.getElementById("tab-change");
+    tabButton.addEventListener('click',function () {
+        if(tabButton.checked){
+            tab_change_state = false;
+        }else{
+            tab_change_state = true;
+            imgToEmotion();
+        }
+    });
+    var tabVideo = document.getElementById("tab-video");
+    tabVideo.addEventListener('click',function () {
+        if(tabVideo.checked){
+            video.style.display = 'none';
+        }else{
+            video.style.display = 'block';
+        }
+    });
+
     function chat(str){
         var data = {data: str};
         $.ajax({
@@ -246,6 +267,7 @@ function changeState(str){
     }
 
     function imgToEmotion() {
+        if(!tab_change_state) return;
         canvasContext.drawImage(video, 0, 0, 320, 240);
         var element = document.createElement("img");
         element.src = canvas.toDataURL();

@@ -54,6 +54,7 @@
 }
 
 .tab-button{
+    cursor: pointer;
     position: fixed;
     bottom: 30px;
     right: 30px;
@@ -74,7 +75,11 @@
     box-shadow:5px 5px 10px #000;
 }
 
-#tab-change-label{
+#tab-change, #tab-video{
+    display: none;
+}
+
+#tab-change-label,  #tab-video-label{
     box-sizing: border-box;
     position: fixed;
     bottom: 110px;
@@ -86,6 +91,10 @@
     border: 5px solid tomato;
     border-radius: 40px;
     background: #ff2a0a;
+    background-image: url("../img/smail.png");
+    background-size: 24px 24px;
+    background-position: center;
+    background-repeat: no-repeat;
     color: #ffffff;
     font-size: 20px;
     line-height: 20px;
@@ -94,4 +103,42 @@
     -webkit-box-shadow:5px 5px 10px #000;
     -moz-box-shadow:5px 5px 10px #000;
     box-shadow:5px 5px 10px #000;
+    cursor: pointer;
+}
+
+#tab-change:checked ~ #tab-change-label{
+    bottom: 106px;
+    background: #999999 ;
+    background-image: url("../img/smail.png");
+    background-size: 24px 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 5px solid #777777;
+
+    -webkit-box-shadow:3px 3px 10px #000;
+    -moz-box-shadow:3px 3px 10px #000;
+    box-shadow:3px 3px 10px #000;
+}
+
+#tab-video-label{
+    bottom: 190px;
+    background: #ff2a0a;
+    background-image: url("../img/video.png");
+    background-size: 24px 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#tab-video:checked ~ #tab-video-label{
+    bottom: 186px;
+    background: #999999 ;
+    background-image: url("../img/video.png");
+    background-size: 24px 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 5px solid #777777;
+
+    -webkit-box-shadow:3px 3px 10px #000;
+    -moz-box-shadow:3px 3px 10px #000;
+    box-shadow:3px 3px 10px #000;
 }
