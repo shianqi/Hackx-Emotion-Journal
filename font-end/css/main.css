@@ -27,7 +27,7 @@ html, body {
     font-size: 1.5em;
     letter-spacing: .8px;
     color: tomato;
-    background-color: #4F0E91;
+    background-color: #def0ed;
 }
 
 /**
@@ -101,7 +101,7 @@ SLIDER
 *************FACE
 ***********************************/
 .face-wrapper {
-    border: 3px solid #4F0E91;
+    border: 3px solid #def0ed;
     border-radius: 100%;
     width: 220px;
     height: 220px;
@@ -156,10 +156,10 @@ SLIDER
     left: -20px;
 }
 #face-bg.case4 {
-    background-color: #e85b51;
+    background-color: #ff9966;
 }
 #face-bg.case4 .face-light {
-    background: #ECA58F;
+    background: #ffcc99;
     border-radius: 100%;
     height: 220px;
     width: 220px;
@@ -167,10 +167,10 @@ SLIDER
     left: 20px;
 }
 #face-bg.case5 {
-    background-color: #ff3279;
+    background-color: #ff6666;
 }
 #face-bg.case5 .face-light {
-    background: #FF80AC;
+    background: #FF9999;
     border-radius: 100%;
     height: 220px;
     width: 220px;
@@ -293,7 +293,7 @@ SLIDER
     transform: translateX(20px) translateY(-10px);
 }
 #eyes.case4 .eyebrow {
-    background: #e85b51;
+    background: #ff9966;
     height: 20px;
     border-radius: 80px 80px 60px 60px;
     transform: rotate(-20deg);
@@ -302,7 +302,7 @@ SLIDER
     transform: rotate(20deg);
 }
 #eyes.case4 .eyelid {
-    background: #e85b51;
+    background: #ff9966;
 }
 #eyes.case5 {
     transform: translateX(5px) translateY(-20px);
@@ -311,7 +311,7 @@ SLIDER
     width: 20px;
 }
 #eyes.case5 .eyebrow {
-    background: #ff3279;
+    background: #ff6666;
     height: 20px;
     border-radius: 80px 80px 60px 60px;
     transform: rotate(-40deg);
@@ -320,11 +320,11 @@ SLIDER
     transform: rotate(40deg);
 }
 #eyes.case5 .eyelid {
-    background: #ff3279;
+    background: #ff6666;
 }
 #eyes.case5 .bottomlid {
     position: absolute;
-    background: #FF80AC;
+    background: #FFcccc;
     width: 25px;
     height: 25px;
     border-radius: 50px;
@@ -463,7 +463,7 @@ SLIDER
 }
 #mouth.case5 {
     top: 105px;
-    border-radius: 50px;
+    border-radius: 40px;
     background: #343838;
     transform: rotate(-15deg);
 
@@ -473,7 +473,7 @@ SLIDER
     height: 0px;
     display: block;
     border-top: 70px solid #343838;
-    border-left: 83px solid transparent;
+    border-left: 80px solid transparent;
     border-right: 70px solid transparent;
     /* background: #FF80AC; */
     border-radius: 10px;
