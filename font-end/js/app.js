@@ -56,6 +56,18 @@ function f8(){
     $(face).addClass("case8");
 }
 
+function changeState(str){
+    switch (str){
+        case 'sadness': f1(); break;
+        case 'disgust': f2(); break;
+        case 'neutral': f3(); break;
+        case 'contempt': f4(); break;
+        case 'happiness': f5(); break;
+        case 'surprise': f6(); break;
+        case 'fear': f7(); break;
+        case 'anger': f8(); break;
+    }
+}
 
 function startCam(){
     var video = document.getElementById('video');
@@ -119,22 +131,31 @@ function startCam(){
 
             var pic = {data:element.src};
 
-            var params = {
-                // Request parameters
-            };
-
-
             $.ajax({
-                url: "http://10.181.41.137:8080/re_pic.php",
+                url: "http://www.hupeng.wang:8080/PicServer/re_pic.php",
                 type: "POST",
                 // Request body
                 data: pic,
             })
                 .done(function(data) {
-                    alert("success");
+                    data = JSON.parse(data);
+                    if(data.length!==0){
+                        var res = {name:"def",value:0};
+                        var scores = data['0']["scores"];
+                        for(var score in scores){
+                            console.log(score,scores[score]);
+                            if(scores[score]>res.value){
+                                res.value = scores[score];
+                                res.name = score;
+                            }
+                        }
+                        changeState(res.name);
+                    }else{
+                        console.log("未识别到人");
+                    }
                 })
                 .fail(function() {
-                    alert("error");
+
                 });
         }
 
@@ -142,6 +163,7 @@ function startCam(){
         document.getElementById("photoButton").addEventListener('click', takePhoto);
         document.getElementById("post").addEventListener('click', post);
 
+        // setInterval(post,1100);
         start();
     } else {
         document.getElementById("startButton").disabled = true;
