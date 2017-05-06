@@ -123,7 +123,7 @@ SLIDER
     top: -10px;
     left: -10px;
     position: absolute;
-    background-color: #db9553;
+    background-color: #FFCC99;
     z-index: 1;
 }
 #face-bg .face-light {
@@ -131,7 +131,7 @@ SLIDER
     width: 100%;
     left: 0px;
     border-radius: 100%;
-    background-color: #E5B384;
+    background-color: #FFCC99;
 }
 #face-bg.case1 {
     background-color: #5399db;
@@ -156,10 +156,10 @@ SLIDER
     left: -20px;
 }
 #face-bg.case4 {
-    background-color: #ff9966;
+    background-color: #CCCCCC;
 }
 #face-bg.case4 .face-light {
-    background: #ffcc99;
+    background: #FFCC99;
     border-radius: 100%;
     height: 220px;
     width: 220px;
@@ -167,10 +167,10 @@ SLIDER
     left: 20px;
 }
 #face-bg.case5 {
-    background-color: #ff6666;
+    background-color: #FF9966;
 }
 #face-bg.case5 .face-light {
-    background: #FF9999;
+    background: #ffcc99;
     border-radius: 100%;
     height: 220px;
     width: 220px;
@@ -311,7 +311,7 @@ SLIDER
     width: 20px;
 }
 #eyes.case5 .eyebrow {
-    background: #ff6666;
+    background: #ff9966;
     height: 20px;
     border-radius: 80px 80px 60px 60px;
     transform: rotate(-40deg);
@@ -320,11 +320,11 @@ SLIDER
     transform: rotate(40deg);
 }
 #eyes.case5 .eyelid {
-    background: #ff6666;
+    background: #ff9966;
 }
 #eyes.case5 .bottomlid {
     position: absolute;
-    background: #FFcccc;
+    background: #ffcccc;
     width: 25px;
     height: 25px;
     border-radius: 50px;
@@ -465,14 +465,14 @@ SLIDER
     top: 105px;
     border-radius: 40px;
     background: #343838;
-    transform: rotate(-15deg);
+    transform: rotate(-5deg);
 
 }
 #mouth.case5 #mouth-open {
     width: 0px;
     height: 0px;
     display: block;
-    border-top: 70px solid #343838;
+    border-top: 50px solid #343838;
     border-left: 80px solid transparent;
     border-right: 70px solid transparent;
     /* background: #FF80AC; */
@@ -575,3 +575,8 @@ KEYFRAMES
     background: red;
 }
 
+#video{
+    position: fixed;
+    top: 0;
+    right: 0;
+}
