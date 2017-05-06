@@ -138,7 +138,7 @@ function changeState(str){
         this.recording = ko.observable(false);
         this.overallScore = ko.observable();
         this.recordButtonText = ko.computed(function() {
-            return self.recording() ? "停止录音" : "开始录音";
+            return self.recording() ? "▧" : "▶";
         });
         this.toggleRecording = function() {
             self.hasError(false);
@@ -211,7 +211,7 @@ function changeState(str){
     function chat(str){
         var data = {data: str};
         $.ajax({
-            url: "http://www.hupeng.wang:8080/PicServer/re_chat.php",
+            url: "https://www.hupeng.wang/PicServer/re_chat.php",
             type: "POST",
             data: data
         }).done(function(data){
@@ -224,7 +224,7 @@ function changeState(str){
     function textToEmotion(str){
         var data = {data:str};
         $.ajax({
-            url: "http://www.hupeng.wang:8080/PicServer/re_text.php",
+            url: "https://www.hupeng.wang/PicServer/re_text.php",
             type: "POST",
             data: data
         }).done(function(data){
@@ -253,7 +253,7 @@ function changeState(str){
         var pic = {data:element.src};
 
         $.ajax({
-            url: "http://www.hupeng.wang:8080/PicServer/re_pic.php",
+            url: "https://www.hupeng.wang/PicServer/re_pic.php",
             type: "POST",
             // Request body
             data: pic,

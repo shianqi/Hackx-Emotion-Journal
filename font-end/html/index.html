@@ -66,10 +66,12 @@
 
 <div class="container">
     <p>
-        <button class="btn-lg btn-primary" data-bind="click: toggleRecording, text: recordButtonText, css: {'btn-danger': recording}"></button>
+        <label id="tab-change-label" for="tab-change"></label>
+        <input id="tab-change" type="checkbox">
+        <button class="tab-button" data-bind="click: toggleRecording, text: recordButtonText, css: {'btn-danger': recording}"></button>
     </p>
 
-    <p data-bind="visible: hasError">
+    <p data-bind="visible: hasError" style="display: none">
         <label class="label label-danger" data-bind="text: errorResp"></label><br/>
         <label class="label label-danger" data-bind="text: errorInfo"></label>
     </p>

@@ -52,3 +52,46 @@
     top: 70px;
     right: 0;
 }
+
+.tab-button{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    outline: none;
+    margin: 0;
+    border: 5px solid tomato;
+    border-radius: 40px;
+    background: #ff2a0a;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 500;
+
+    -webkit-box-shadow:5px 5px 10px #000;
+    -moz-box-shadow:5px 5px 10px #000;
+    box-shadow:5px 5px 10px #000;
+}
+
+#tab-change-label{
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 110px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    outline: none;
+    margin: 0;
+    border: 5px solid tomato;
+    border-radius: 40px;
+    background: #ff2a0a;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 500;
+
+    -webkit-box-shadow:5px 5px 10px #000;
+    -moz-box-shadow:5px 5px 10px #000;
+    box-shadow:5px 5px 10px #000;
+}
