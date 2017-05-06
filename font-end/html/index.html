@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <title>表情</title>
     <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<div id="nav">
+    <div id="nav-list">
+        <a href="#" class="logo"></a>
+        <a href="#" class="nav-item">Team</a>
+        <a href="#" class="nav-item">Conversation</a>
+        <a href="#" class="nav-item">Journal</a>
+    </div>
+</div>
 <div class="flexbox">
     <div class="flex-item">
         <h2>Hello!</h2>
@@ -33,21 +42,22 @@
             </div>
         </div>
     </div>
-    <div class="flex-item">
-        <h4> How Are You Feeling Today?</h4>
-        <div id="slider"></div>
-        <button onclick="f1()">1</button>
-        <button onclick="f2()">2</button>
-        <button onclick="f3()">3</button>
-        <button onclick="f4()">4</button>
-        <button onclick="f5()">5</button>
-        <button onclick="f6()">6</button>
-        <button onclick="f7()">7</button>
-        <button onclick="f8()">8</button>
+    <div class="flex-item" >
+        <h4 id="chat-box"> How Are You Feeling Today?</h4>
+        <div id="slider" style="display: none">
+            <button onclick="f1()">1</button>
+            <button onclick="f2()">2</button>
+            <button onclick="f3()">3</button>
+            <button onclick="f4()">4</button>
+            <button onclick="f5()">5</button>
+            <button onclick="f6()">6</button>
+            <button onclick="f7()">7</button>
+            <button onclick="f8()">8</button>
+        </div>
     </div>
 </div>
 <div id="main" style="">
-    <video id="video" width="320" height="240" class="margin"></video>
+    <video id="video" width="320" height="240" class="margin" muted></video>
     <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
     <div id="stack" class="playground" style="background-color: darkgray;">
     </div>
@@ -64,7 +74,7 @@
         <label class="label label-danger" data-bind="text: errorInfo"></label>
     </p>
 
-    <div class="score-wrap">
+    <div class="score-wrap" style="display: none">
         <h3>识别结果:  <span data-bind="text: overallScore"></span></h3>
 
         <table class="table table-striped">

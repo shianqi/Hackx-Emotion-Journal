@@ -60,6 +60,7 @@ function changeState(str){
         case 'disgust': f2(); break;
         case 'neutral': f3(); break;
         case 'contempt': f4(); break;
+        case 'joy': f4();break;
         case 'happiness': f5(); break;
         case 'surprise': f6(); break;
         case 'fear': f7(); break;
@@ -107,6 +108,8 @@ function changeState(str){
         var handleMessage = function(resp) {
             try {
                 var respObj = JSON.parse(resp);
+                textToEmotion(respObj.decoded);
+                chat(respObj.decoded);
                 self.overallScore(respObj.decoded);
                 respObj.details.forEach(function(wordRate) {
                     self.wordRates.push({
@@ -205,6 +208,44 @@ function changeState(str){
         setTimeout(imgToEmotion, 1000);
     };
 
+    function chat(str){
+        var data = {data: str};
+        $.ajax({
+            url: "http://www.hupeng.wang:8080/PicServer/re_chat.php",
+            type: "POST",
+            data: data
+        }).done(function(data){
+            document.getElementById("chat-box").innerText = data;
+        }).fail(function(){
+            console.log('Chat Error!');
+
+        })
+    }
+
+    function textToEmotion(str){
+        var data = {data:str};
+        $.ajax({
+            url: "http://www.hupeng.wang:8080/PicServer/re_text.php",
+            type: "POST",
+            data: data
+        }).done(function(data){
+            data = JSON.parse(data);
+            console.log(data);
+            var res = {name:"def",value:0};
+            var emotion = data["document_tone"]["tone_categories"][0]["tones"];
+            for(var i = 0;i<emotion.length;i++){
+                if(emotion[i]["score"]>res.value){
+                    res.value = emotion[i]["score"];
+                    res.name = emotion[i]["tone_id"];
+                }
+            }
+            console.log(res.name);
+            changeState(res.name);
+        }).fail(function(){
+            console.log('textToEmotion Error');
+        })
+    }
+
     function imgToEmotion() {
         canvasContext.drawImage(video, 0, 0, 320, 240);
         var element = document.createElement("img");
@@ -219,13 +260,11 @@ function changeState(str){
             data: pic,
         }).done(function(data) {
             data = JSON.parse(data);
-            console.log(data);
             if(data.length!==0){
                 var res = {name:"def",value:0};
-                console.log(data['0']);
                 var scores = data['0']["scores"];
                 for(var score in scores){
-                    console.log(score,scores[score]);
+                    //console.log(score,scores[score]);
                     if(scores[score]>res.value){
                         res.value = scores[score];
                         res.name = score;
