@@ -51,18 +51,44 @@
     <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
     <div id="stack" class="playground" style="background-color: darkgray;">
     </div>
-    <div class="margin">
-        <ol type="1">
-            <li><button id="startButton">Start webcam</button></li>
-            <li><button id="photoButton">Take photo</button></li>
-            <li><button id="post">Post</button></li>
-        </ol>
-    </div>
 </div>
 
 
-</body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="../js/app.js"></script>
+<div class="container">
+    <p>
+        <button class="btn-lg btn-primary" data-bind="click: toggleRecording, text: recordButtonText, css: {'btn-danger': recording}"></button>
+    </p>
 
+    <p data-bind="visible: hasError">
+        <label class="label label-danger" data-bind="text: errorResp"></label><br/>
+        <label class="label label-danger" data-bind="text: errorInfo"></label>
+    </p>
+
+    <div class="score-wrap">
+        <h3>识别结果:  <span data-bind="text: overallScore"></span></h3>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>单词</th>
+                <th>置信度</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: wordRates">
+            <tr>
+                <td data-bind="text: word"></td>
+                <td data-bind="text: score"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+<script src="../js/vendor/jquery.min.js"></script>
+<script src="../js/vendor/knockback-full-stack.min.js"></script>
+<script src="../js/llc/constants.js"></script>
+<script src="../js/llc/recorder.js"></script>
+<script src="../js/llc/utils.js"></script>
+<script src="../js/app.js"></script>
 </html>

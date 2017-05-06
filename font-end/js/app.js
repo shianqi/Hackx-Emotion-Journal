@@ -1,6 +1,4 @@
-window.onload = function(){
-    startCam();
-};
+
 function removeClass(){
     $(".face-wrapper").children().removeAttr('class');
 }
@@ -69,106 +67,177 @@ function changeState(str){
     }
 }
 
-function startCam(){
+(function(){
     var video = document.getElementById('video');
     var canvas = document.getElementById('canvas');
     var canvasContext = canvas.getContext('2d');
+    var audio_context;
 
-    navigator.getUserMedia = (navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia);
-
-    if (navigator.getUserMedia) {
-        function gotStream(stream) {
-
-
-            //获取视频数据
-            if (navigator.mozGetUserMedia) {
-                video.mozSrcObject = stream;
-            } else {
-                var vendorURL = window.URL || window.webkitURL;
-                video.src = vendorURL.createObjectURL(stream);
-            }
-            video.play();
-        }
-
-        function error(message) {
-            console.log(message);
-        }
-
-        function start() {
-            this.disabled = true;
-            navigator.getUserMedia( {
-                    audio: true,
-                    video: {
-                        mandatory: {
-                            maxWidth: 320,
-                            maxHeight: 240
-                        }
-                    }
-                },
-                gotStream,
-                error);
-        }
-
-
-
-        function takePhoto() {
-            canvasContext.drawImage(video, 0, 0, 320, 240);
-            var element = document.createElement("img");
-            element.src = canvas.toDataURL();
-            //获取照片信息
-            console.log(element.src);
-            document.getElementById("stack").appendChild(element);
-        }
-
-        //上传图片文件
-        function post() {
-            canvasContext.drawImage(video, 0, 0, 320, 240);
-            var element = document.createElement("img");
-            element.src = canvas.toDataURL();
-
-            var pic = {data:element.src};
-
-            $.ajax({
-                url: "http://www.hupeng.wang:8080/PicServer/re_pic.php",
-                type: "POST",
-                // Request body
-                data: pic,
-            })
-                .done(function(data) {
-                    data = JSON.parse(data);
-                    if(data.length!==0){
-                        var res = {name:"def",value:0};
-                        var scores = data['0']["scores"];
-                        for(var score in scores){
-                            console.log(score,scores[score]);
-                            if(scores[score]>res.value){
-                                res.value = scores[score];
-                                res.name = score;
-                            }
-                        }
-                        changeState(res.name);
-                    }else{
-                        console.log("未识别到人");
-                    }
-                })
-                .fail(function() {
-
-                });
-        }
-
-        document.getElementById("startButton").addEventListener('click', start);
-        document.getElementById("photoButton").addEventListener('click', takePhoto);
-        document.getElementById("post").addEventListener('click', post);
-
-        // setInterval(post,1100);
-        start();
-    } else {
-        document.getElementById("startButton").disabled = true;
-        document.getElementById("photoButton").disabled = true;
-
-        alert("Sorry, you can't capture video from your webcam in this web browser. Try the latest desktop version of Firefox, Chrome or Opera.");
+    function __log(e, data) {
+        console.log(e + " " + (data || ''));
     }
-}
+
+    function createRecorder(stream, handleMessage) {
+                //获取视频数据
+        if (navigator.mozGetUserMedia) {
+            video.mozSrcObject = stream;
+        } else {
+            var vendorURL = window.URL || window.webkitURL;
+            video.src = vendorURL.createObjectURL(stream);
+        }
+        video.play();
+
+        var input = audio_context.createMediaStreamSource(stream);
+
+        var recorder = new Recorder(input, {
+            serverUrl: "wss://rating.llsstaging.com/llcup/stream/upload",
+            handleMessage: handleMessage
+        });
+
+        __log('Recorder initialised.');
+
+        return recorder;
+    }
+
+    var Page = function() {
+        var self = this;
+        var inited = false;
+        var recorder = null;
+
+        var handleMessage = function(resp) {
+            try {
+                var respObj = JSON.parse(resp);
+                self.overallScore(respObj.decoded);
+                respObj.details.forEach(function(wordRate) {
+                    self.wordRates.push({
+                        word: wordRate.word,
+                        score: wordRate.confidence
+                    })
+                });
+            } catch (e) {
+                self.hasError(true);
+                self.errorResp(resp);
+                self.errorInfo(e.message);
+            }
+        }
+
+        this.inited = ko.observable(false);
+        initAudioSetting(function(stream){
+            recorder = createRecorder(stream, handleMessage);
+            self.inited(true);
+        });
+
+        this.hasError = ko.observable(false);
+        this.errorResp = ko.observable('');
+        this.errorInfo = ko.observable('');
+        this.wordRates = ko.observableArray([]);
+        this.readingRefText = ko.observable(randomPick(Constants.PreparedTexts));
+        this.recording = ko.observable(false);
+        this.overallScore = ko.observable();
+        this.recordButtonText = ko.computed(function() {
+            return self.recording() ? "停止录音" : "开始录音";
+        });
+        this.toggleRecording = function() {
+            self.hasError(false);
+            self.wordRates.removeAll();
+            self.recording(!self.recording());
+        }
+
+        //this.switchRefText = function() {
+        //  self.readingRefText(randomPick(Constants.PreparedTexts));
+        //}
+
+        this.recording.subscribe(function(){
+            if(self.recording()) {
+                /*
+                 algConfig = {
+                 type: 'readaloud',
+                 quality: -1,
+                 //reftext: self.readingRefText().replace(/[,.]/g, '')
+                 reference: self.readingRefText().toLowerCase().replace(/[^A-Za-z0-9']/g, ' ').trim()
+                 };
+                 */
+                algConfig = {
+                    type: 'asr',
+                    quality: -1
+                };
+                console.log(algConfig);
+                recorder.record({
+                    algConfig: algConfig
+                });
+            } else {
+                recorder.stop();
+                recorder.clear();
+            }
+        });
+    }
+
+    var initAudioSetting = function(startUserMediaCallback) {
+        try {
+            // webkit shim
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+            window.URL = window.URL || window.webkitURL;
+
+            audio_context = new AudioContext;
+            __log('Audio context set up.');
+            __log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+        } catch (e) {
+            alert('No web audio support in this browser!');
+        }
+
+        navigator.getUserMedia({
+            audio: true,
+            video: {
+                mandatory: {
+                    maxWidth: 320,
+                    maxHeight: 240
+                }
+            }
+        }, startUserMediaCallback, function(e) {
+            __log('No live audio input: ' + e);
+        });
+    }
+
+    window.onload = function init() {
+        window.page = new Page();
+        ko.applyBindings(window.page);
+        setTimeout(imgToEmotion, 1000);
+    };
+
+    function imgToEmotion() {
+        canvasContext.drawImage(video, 0, 0, 320, 240);
+        var element = document.createElement("img");
+        element.src = canvas.toDataURL();
+
+        var pic = {data:element.src};
+
+        $.ajax({
+            url: "http://www.hupeng.wang:8080/PicServer/re_pic.php",
+            type: "POST",
+            // Request body
+            data: pic,
+        }).done(function(data) {
+            data = JSON.parse(data);
+            console.log(data);
+            if(data.length!==0){
+                var res = {name:"def",value:0};
+                console.log(data['0']);
+                var scores = data['0']["scores"];
+                for(var score in scores){
+                    console.log(score,scores[score]);
+                    if(scores[score]>res.value){
+                        res.value = scores[score];
+                        res.name = score;
+                    }
+                }
+                changeState(res.name);
+            }else{
+                console.log("未识别到人");
+            }
+            setTimeout(imgToEmotion,0);
+        }).fail(function() {
+            setTimeout(imgToEmotion,0);
+        });
+    }
+}).call(window);
