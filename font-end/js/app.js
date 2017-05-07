@@ -109,9 +109,9 @@ function changeState(str){
         var handleMessage = function(resp) {
             try {
                 var respObj = JSON.parse(resp);
-                if(respObj.decoded){
-                    textToEmotion(respObj.decoded);
-                }
+                // if(respObj.decoded){
+                //     textToEmotion(respObj.decoded);
+                // }
                 chat(respObj.decoded);
                 self.overallScore(respObj.decoded);
                 respObj.details.forEach(function(wordRate) {
@@ -237,6 +237,7 @@ function changeState(str){
             data: data
         }).done(function(data){
             document.getElementById("chat-box").innerText = data;
+            textToEmotion(data);
         }).fail(function(){
             console.log('Chat Error!');
         })
